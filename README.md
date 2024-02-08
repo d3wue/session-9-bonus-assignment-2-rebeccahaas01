@@ -10,5 +10,3 @@ In your second project, you will write a tool to extract and collect soccer data
 #  3. Select team and and show all players of the team
 #  4. Stop the program
 
-
-
