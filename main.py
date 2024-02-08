@@ -1,10 +1,10 @@
 # Bonus Assignment 2: Webscraping
 
-#In your second project, you will write a tool to extract and collect soccer data from [transfermark.com](https://www.transfermarkt.com/). This website provides data on soccer teams, and especially soccer players, from all relevant leagues around the globe.
+# In your second project, you will write a tool to extract and collect soccer data from [transfermark.com](https://www.transfermarkt.com/). This website provides data on soccer teams, and especially soccer players, from all relevant leagues around the globe.
 
-#For this assignment, you should focus on extracting the available information for one league.
+# For this assignment, you should focus on extracting the available information for one league.
 
-#Your program should have at least a minimal interface to interact with the data. You could for #example use the following options (depending on the focus of your program):
+# Your program should have at least a minimal interface to interact with the data. You could for # example use the following options (depending on the focus of your program):
 #  1. Show available teams
 #  2. Select team and show high level information on the team
 #  3. Select team and and show all players of the team
@@ -28,7 +28,7 @@ table = htmlDocument.find('table', {'class': 'items'}).find('tbody')
 teams = table.find_all('tr')
 
 def display_teams():
-    print("\nVerfügbare Mannschaften:")
+    print("\nShow available teams:")
     for i in range(len(teams)):
         team = teams[i]
         name = team.find('td', {'class': 'hauptlink no-border-links'}).text.strip()
@@ -44,42 +44,46 @@ def team_info(team_index):
     marketValue = team.find_all("td", {"class": "rechts"})
     averageMV = marketValue[0].text
     totalMV = marketValue[1].text.strip()
-    print(f"\n{name} - Wichtige Informationen:")
-    print(f"Anzahl der Spieler im Kader: {squad}")
-    print(f"Durchschnittsalter: {age}")
-    print(f"Ausländer im Team: {foreigners}")
-    print(f"Durchschnittlicher Marktwert: {averageMV}")
-    print(f"Gesamtmarktwert: {totalMV}")
+    print(f"\n{name} - Important Information:")
+    print(f"Number of players in squad: {squad}")
+    print(f"Average age: {age}")
+    print(f"Foreigners in team: {foreigners}")
+    print(f"Average market value: {averageMV}")
+    print(f"Total market value: {totalMV}")
 
 def display_team_players(team_index):
     team = teams[team_index]
     name = team.find('td', {'class': 'hauptlink no-border-links'}).text.strip()
-    print(f"\nSpieler der Mannschaft {name}:")
-    # Hier könntest du den Code einfügen, um die Spieler der Mannschaft anzuzeigen
+    print(f"\nPlayers of team {name}:")
+    players = team.find_all('td', {'class': 'hauptlink'})
+    for player in players: 
+        player_name = player.text.strip()
+        print(player_name)
 
 while True:
-    print("\nMenü:")
-    print("1. Verfügbare Mannschaften anzeigen")
-    print("2. Eine Mannschaft auswählen und wichtige Informationen anzeigen")
-    print("3. Mannschaft auswählen und alle Spieler anzeigen")
-    print("4. Programm beenden")
+    print("\nMenu:")
+    print("1. Show available teams")
+    print("2. Select a team and show important information")
+    print("3. Select a team and show all players")
+    print("4. Exit the program")
 
-    choice = input("Bitte wählen Sie eine Option: ")
+    choice = input("Please choose an option: ")
 
     if choice == '1':
         display_teams()
 
     elif choice == '2':
-        team_index = int(input("Geben Sie die Nummer der Mannschaft ein: ")) - 1
+        team_index = int(input("Enter the number of the team: ")) - 1
         team_info(team_index)
 
     elif choice == '3':
-        team_index = int(input("Geben Sie die Nummer der Mannschaft ein: ")) - 1
+        team_index = int(input("Enter the number of the team: ")) - 1
         display_team_players(team_index)
 
     elif choice == '4':
-        print("Das Programm wird beendet.")
+        print("End of the program.")
         break
 
     else:
-        print("Ungültige Eingabe. Bitte wählen Sie eine gültige Option.")
+        print("Please choose an option between 1 and 4!.")
+
