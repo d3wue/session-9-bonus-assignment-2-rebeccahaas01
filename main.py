@@ -29,13 +29,13 @@ teams = table.find_all('tr')
 
 
 
-def display_teams():
+def showTeams():
     print("\nShow available teams:")
     for i, team in enumerate(teams, 1):
         name = team.find('td', {'class': 'hauptlink no-border-links'}).text.strip()
         print(f"{i}: {name}")
 
-def team_info(team_index):
+def teamInfo(team_index):
     team = teams[team_index]
     name = team.find('td', {'class': 'hauptlink no-border-links'}).text.strip()
     info = team.find_all("td", {"class": "zentriert"})
@@ -52,14 +52,23 @@ def team_info(team_index):
     print(f"Average market value: {averageMV}")
     print(f"Total market value: {totalMV}")
 
-def display_team_players(team_index):
+def showPlayers(team_index):
     team = teams[team_index]
     name = team.find('td', {'class': 'hauptlink no-border-links'}).text.strip()
+    link_to_team = team.find('td', {'class': 'hauptlink no-border-links'}).a.get('href')
+
+    r = requests.get("https://www.transfermarkt.com" + link_to_team, headers=userAgent)
+    htmlText = r.text
+    teamHtmlDocument = bs4.BeautifulSoup(htmlText, "html.parser")
+
     print(f"\nPlayers of team {name}:")
-    players = team.find_all('td', {'class': 'hauptlink'})
+    playersTable = teamHtmlDocument.find('table',{'class': 'items'}).find('tbody')
+    players = playersTable.find_all('td', {'class': 'hauptlink'})
     for player in players:
-        player_name = player.text.strip()
-        print(player_name)
+       if len(player["class"]) != 1:
+           continue
+       player_name = player.text.strip()
+       print(player_name)
 
 while True:
     print("\nMenu:")
@@ -71,18 +80,20 @@ while True:
     choice = input("Please choose an option: ")
 
     if choice == '1':
-        display_teams()
+        showTeams()
 
     elif choice == '2':
         team_index = int(input("Enter the number of the team: ")) - 1
-        team_info(team_index)
+        teamInfo(team_index)
 
     elif choice == '3':
         team_index = int(input("Enter the number of the team: ")) - 1
-        display_team_players(team_index)
+        showPlayers(team_index)
 
     elif choice == '4':
         print("End of the program.")
         break
     else:
         print("Please choose an option between 1 and 4!")
+
+
